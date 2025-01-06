@@ -33,6 +33,12 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Apply patches
+        run: |
+          sudo apt update -qq && sudo apt install -y quilt
+          cd main/src/main/cpp/openvpn && QUILT_PATCHES=$GITHUB_WORKSPACE/patches quilt push -a
+
       - name: Build the app
         run: ./gradlew assemble${{ matrix.target }}Release
 
