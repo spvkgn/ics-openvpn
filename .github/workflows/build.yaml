@@ -45,8 +45,19 @@ jobs:
       - name: Run Unit tests
         run: ./gradlew test${{ matrix.target }}ReleaseUnitTest
 
-      - name: Archive apk artifact
-        uses: actions/upload-artifact@v3
+
+      - name: Rename apk files
+        run: |
+          cd main/build/outputs/apk/${{ matrix.target }}/release
+          for f in *ovpn*-signed.apk; do mv $f $GITHUB_WORKSPACE/ics-openvpn_${GITHUB_REF_NAME#v}-${f#main-ui-} ; done
+
+      - name: Upload release assets
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
         with:
-          name: build-${{matrix.target}}-release-apk
-          path: main/build/outputs/apk/**/*universal*.apk
+          fail_on_unmatched_files: true
+          prerelease: false
+          draft: false
+          body: |
+            ### ics-openvpn ${{ github.ref_name }}
+          files: ics-openvpn*.apk
