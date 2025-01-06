@@ -1,7 +1,6 @@
-diff -u -r -x .DS_Store openvpn-2.6.2.old/src/openvpn/socket.h openvpn-2.6.2.new/src/openvpn/socket.h
---- openvpn-2.6.2.old/src/openvpn/socket.h	2023-04-24 13:02:02.000000000 -0400
-+++ openvpn-2.6.2.new/src/openvpn/socket.h	2023-04-24 13:02:02.000000000 -0400
-@@ -246,6 +246,10 @@
+--- a/src/openvpn/socket.h
++++ b/src/openvpn/socket.h
+@@ -263,6 +263,10 @@ struct link_socket
  #endif
  };
  
@@ -12,7 +11,7 @@ diff -u -r -x .DS_Store openvpn-2.6.2.old/src/openvpn/socket.h openvpn-2.6.2.new
  /*
   * Some Posix/Win32 differences.
   */
-@@ -1067,32 +1071,58 @@
+@@ -1058,32 +1062,58 @@ int link_socket_read_udp_posix(struct li
  static inline int
  link_socket_read(struct link_socket *sock,
                   struct buffer *buf,
@@ -75,8 +74,8 @@ diff -u -r -x .DS_Store openvpn-2.6.2.old/src/openvpn/socket.h openvpn-2.6.2.new
  }
  
  /*
-@@ -1184,8 +1214,34 @@
- static inline int
+@@ -1175,8 +1205,34 @@ link_socket_write_udp(struct link_socket
+ static inline ssize_t
  link_socket_write(struct link_socket *sock,
                    struct buffer *buf,
 -                  struct link_socket_actual *to)

@@ -1,9 +1,8 @@
-diff -u -r -x .DS_Store openvpn-2.6.4.old/src/openvpn/forward.c openvpn-2.6.4.new/src/openvpn/forward.c
---- openvpn-2.6.4.old/src/openvpn/forward.c	2023-06-03 12:09:13.000000000 -0400
-+++ openvpn-2.6.4.new/src/openvpn/forward.c	2023-06-03 12:09:13.000000000 -0400
-@@ -928,7 +928,10 @@
+--- a/src/openvpn/forward.c
++++ b/src/openvpn/forward.c
+@@ -943,7 +943,10 @@ read_incoming_link(struct context *c, st
  
-     status = link_socket_read(c->c2.link_socket,
+     status = link_socket_read(sock,
                                &c->c2.buf,
 -                              &c->c2.from);
 +                              &c->c2.from,
@@ -11,17 +10,17 @@ diff -u -r -x .DS_Store openvpn-2.6.4.old/src/openvpn/forward.c openvpn-2.6.4.ne
 +                              c->options.ce.xormask,
 +                              c->options.ce.xormasklen);
  
-     if (socket_connection_reset(c->c2.link_socket, status))
+     if (socket_connection_reset(sock, status))
      {
-@@ -1782,7 +1785,10 @@
-                 socks_preprocess_outgoing_link(c, &to_addr, &size_delta);
- 
+@@ -1803,7 +1806,10 @@ process_outgoing_link(struct context *c,
                  /* Send packet */
--                size = link_socket_write(c->c2.link_socket, &c->c2.to_link, to_addr);
-+                size = link_socket_write(c->c2.link_socket, &c->c2.to_link, to_addr,
-+                                         c->options.ce.xormethod,
-+                                         c->options.ce.xormask,
-+                                         c->options.ce.xormasklen);
+                 size = (int)link_socket_write(sock,
+                                               &c->c2.to_link,
+-                                              to_addr);
++                                              to_addr,
++                                              c->options.ce.xormethod,
++                                              c->options.ce.xormask,
++                                              c->options.ce.xormasklen);
  
                  /* Undo effect of prepend */
                  link_socket_write_post_size_adjust(&size, size_delta, &c->c2.to_link);
