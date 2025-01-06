@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          target: [ uiOvpn23, skeletonOvpn2, uiOvpn2 ]
+          target: [ uiOvpn23 ] #, skeletonOvpn2, uiOvpn2 ]
     name: "Build :: ${{ matrix.target }}"
     runs-on: ubuntu-latest
     steps:
@@ -58,7 +58,7 @@ jobs:
       - name: Rename apk files
         run: |
           cd main/build/outputs/apk/${{ matrix.target }}/release
-          for f in *ovpn*-signed.apk; do mv $f $GITHUB_WORKSPACE/ics-openvpn_${GITHUB_REF_NAME#v}-${f#main-ui-} ; done
+          for f in *-signed.apk ; do mv $f $GITHUB_WORKSPACE/ics-openvpn_${GITHUB_REF_NAME#v}-${f#main-ui-} ; done
 
       - name: Upload release assets
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
