@@ -45,6 +45,15 @@ jobs:
       - name: Run Unit tests
         run: ./gradlew test${{ matrix.target }}ReleaseUnitTest
 
+      - name: Sign apk files
+        uses: noriban/sign-android-release@v5
+        id: sign_apk
+        with:
+          releaseDirectory: main/build/outputs/apk/${{ matrix.target }}/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Rename apk files
         run: |
