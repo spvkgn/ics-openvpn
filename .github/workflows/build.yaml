@@ -36,7 +36,7 @@ jobs:
 
       - name: Apply patches
         run: |
-          sudo apt update -qq && sudo apt install -y quilt
+          sudo apt update -qq && sudo apt install -y quilt rename
           cd main/src/main/cpp/openvpn && QUILT_PATCHES=$GITHUB_WORKSPACE/patches quilt push -a
 
       - name: Build the app
@@ -57,8 +57,8 @@ jobs:
 
       - name: Rename apk files
         run: |
-          cd main/build/outputs/apk/${{ matrix.target }}/release
-          for f in *-signed.apk ; do mv $f $GITHUB_WORKSPACE/ics-openvpn_${GITHUB_REF_NAME#v}-${f#main-ui-} ; done
+          find . -type f -name '*-signed.apk' -exec mv {} . \;
+          prename "s/^main-ui/ics-openvpn_${GITHUB_REF_NAME#v}/;s/-release.+(?=\.)//" *.apk
 
       - name: Upload release assets
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
